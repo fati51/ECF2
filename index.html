@@ -1,0 +1,137 @@
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GameSoft - Accueil</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .card-development {
+      position: relative;
+    }
+    .card-development::after {
+      content: "En développement";
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #f44336;
+      color: white;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 5px;
+    }
+  </style>
+
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #747e88;">
+    <div class="container">
+      <a class="navbar-brand" href="#"><img src="./Images/logo jeuxvideo.png" alt="GameSoft Logo" width="60"></a>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Connexion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Voir plus de jeux</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Qui nous sommes</a>
+          </li>
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Recherche" aria-label="Recherche">
+            <button class="btn btn-outline-light" type="submit">Recherche</button>
+          </form>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+  
+  <div class="container">
+    <h1>Bienvenue chez GameSoft</h1>
+    <p>Studio de jeu vidéo français spécialisé dans les RPG</p>
+    <h2>Dernières actualités</h2>
+    <div class="row">
+        <div id="recipe-cards" class="container">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="card card-development">
+                  <img src="./Images/angry-birds.jpg" class="card-img-top" alt="Game 1">
+                  <div class="card-body">
+                    <h5 class="card-title">Nouveau jeu en développement</h5>
+                    <p class="card-text" id="text" style="display: none;">Description du nouveau jeu en développement.</p>
+                    <button type="button" class="btn btn-primary btn-sm" id="btn">En savoir plus</button>
+                  </div>
+                </div>
+              </div>
+              <!DOCTYPE html>
+              <html lang="en">
+              <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>Ma page de jeux</title>
+                  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+              </head>
+              <!DOCTYPE html>
+              <html>
+              <head>
+                  <title>Ajouter aux favoris</title>
+                  <!-- Inclure la bibliothèque jQuery si nécessaire -->
+                  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+              </head>
+              <body>
+                  <!-- Affichage des jeux -->
+                  <div id="jeux">
+                      <div class="jeu">
+                          <h3>Nom du jeu 1</h3>
+                          <button class="ajouter-favoris" data-jeu-id="1">Ajouter aux favoris</button>
+                      </div>
+                      <div class="jeu">
+                          <h3>Nom du jeu 2</h3>
+                          <button class="ajouter-favoris" data-jeu-id="2">Ajouter aux favoris</button>
+                      </div>
+                      <!-- Ajoutez autant de jeux que nécessaire -->
+                  </div>
+              
+                  <script>
+                      // Fonction pour ajouter un jeu aux favoris
+                      function ajouterAuxFavoris(jeuId) {
+                          // Effectuer une requête AJAX pour ajouter le jeu aux favoris
+                          $.ajax({
+                              url: 'score.php',
+                              method: 'POST',
+                              data: { jeu_id: jeuId },
+                              success: function(response) {
+                                  alert(response);
+                              },
+                              error: function() {
+                                  alert('Une erreur s\'est produite lors de l\'ajout aux favoris.');
+                              }
+                          });
+                      }
+              
+                      // Gestionnaire d'événement pour le clic sur le bouton "Ajouter aux favoris"
+                      $(document).on('click', '.ajouter-favoris', function() {
+                          var jeuId = $(this).data('jeu-id');
+                          ajouterAuxFavoris(jeuId);
+                      });
+                  </script>
+              </body>
+              </html>
+              
+              
+      
+    </div>
+  </div>
+
+  <script src="App.js"></script>
+</body>
+</html>
+
