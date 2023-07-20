@@ -2,9 +2,9 @@
 session_start();
 
 $host = 'localhost';
-$dbname = 'gamesoft';
-$username = 'root';
-$password = 'root';
+$dbname = 'u379183731_jeux';
+$username = 'u379183731_root';
+$password = 'Khadidja69@';
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
@@ -56,7 +56,7 @@ div {
 </style>
 <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #747e88;">
     <div class="container-fluid">
-        <a class="navbar-brand" href="acceuil.php"><img src="./Images/logo jeuxvideo.png" alt="GameSoft Logo" width="60"></a>
+        <a class="navbar-brand" href="index.php"><img src="./Images/logo jeuxvideo.png" alt="GameSoft Logo" width="60"></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -99,4 +99,7 @@ div {
    
 </body>
 </html>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 

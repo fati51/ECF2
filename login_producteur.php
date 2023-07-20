@@ -1,19 +1,17 @@
 <?php
 session_start();
 
-
 if (isset($_SESSION['producteur'])) {
-    header('Location: producteur.php');
+    header('Location: login_producteur.php');
     exit;
 }
 
+$error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+    $form_username = $_POST["username"];
+    $form_password = $_POST["password"];
 
-    
     $servername = "localhost";
     $db_username = "root";
     $db_password = "root";
@@ -23,15 +21,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        
         $stmt = $conn->prepare('SELECT id, pseudo, mail, mot_de_passe, role FROM utilisateurs WHERE pseudo = :username');
-        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':username', $form_username);
         $stmt->execute();
         $user = $stmt->fetch();
 
-        
-        if ($user && password_verify($password, $user['mot_de_passe']) && $user['role'] === 'producteur') {
-            
+        if ($user && password_verify($form_password, $user['mot_de_passe']) && $user['role'] === 'producteur') {
             $_SESSION['producteur'] = true;
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['pseudo'];
@@ -39,7 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header('Location: espace_producteur.php');
             exit;
         } else {
-        
             $error = "Identifiant ou mot de passe incorrect.";
         }
     } catch (PDOException $e) {
@@ -49,21 +43,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion producteur</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Connexion producteur</title>
 </head>
 <body>
    
 <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #747e88;">
     <div class="container">
-        <a class="navbar-brand" href="acceuil.php"><img src="./Images/logo jeuxvideo.png" alt="GameSoft Logo" width="100"></a>
+        <a class="navbar-brand" href="index.php"><img src="./Images/logo jeuxvideo.png" alt="GameSoft Logo" width="100"></a>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 
@@ -74,11 +67,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container">
     <h1 class="text-center mb-4">Connexion producteur</h1>
 
-    <?php if (isset($error)) { ?>
-        <p><?php echo $error; ?></p>
+    <?php if (!empty($error)) { ?>
+        <p class="text-center text-danger"><?php echo $error; ?></p>
     <?php } ?>
 
-    <form class="text-center mb-4"style="max-width: 400px; margin: 0 auto;" method="POST" action="<?php echo $_SERVER["PHP_SELF"]; ?>">
+    <form class="text-center mb-4" style="max-width: 400px; margin: 0 auto;" method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <div class="form-group ">
             <label for="username">Nom d'utilisateur :</label>
             <input type="text" class="form-control" name="username" required>

@@ -1,39 +1,58 @@
+<?php
+session_start();
+
+if (isset($_SESSION['producteur'])) {
+    header('Location: producteur.php');
+    exit;
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+
+    $servername = "localhost";
+    $db_username = "root";
+    $db_password = "root";
+    $dbname = "gamesoft";
+
+    try {
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $conn->prepare('SELECT id, pseudo, mail, mot_de_passe, role FROM utilisateurs WHERE pseudo = :username');
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($password, $user['mot_de_passe']) && $user['role'] === 'producteur') {
+            $_SESSION['producteur'] = true;
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['pseudo'];
+            $_SESSION['email'] = $user['mail'];
+            header('Location: espace_producteur.php');
+            exit;
+        } else {
+            $error = "Identifiant ou mot de passe incorrect.";
+        }
+    } catch (PDOException $e) {
+        echo "Erreur de connexion à la base de données : " . $e->getMessage();
+        exit;
+    }
+}
+?>
 
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Espace producteur</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        .navbar-nav li {
-            text-align: left;
-        }
-
-        .navbar-nav li:not(:last-child) {
-            margin-right: 30px;
-        }
-
-        h1, p {
-            color: white;
-        }
-
-        table {
-            border: 1px solid black;
-            padding: 8px;
-        }
-    </style>
+    <title>Connexion producteur</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #747e88;">
     <div class="container">
-        <a class="navbar-brand" href="login_producteur.php"><img src="./Images/logo jeuxvideo.png" alt="GameSoft Logo" width="100"></a>
+        <a class="navbar-brand" href="index.php"><img src="./Images/logo jeuxvideo.png" alt="GameSoft Logo" width="100"></a>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item left">
@@ -53,14 +72,13 @@
 
     <?php
     $servername = "localhost";
-    $username = "root";
-    $password = "root";
-    $dbname = "Gamesoft";
+    $db_username = "root";
+    $db_password = "root";
+    $dbname = "gamesoft";
+
     try {
-        $conn = new mysqli($servername, $username, $password, $dbname);
-        if ($conn->connect_error) {
-            throw new Exception("Erreur de connexion à la base de données : " . $conn->connect_error);
-        }
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $db_username, $db_password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         if (isset($_POST['modifier'])) {
             $jeu_id = $_POST['jeu_id'];
@@ -69,18 +87,25 @@
             $nouvelle_date_fin = $_POST['nouvelle_date_fin'];
             $commentaire = $_POST['commentaire'];
 
-            $sql = "UPDATE jeux SET budget = '$nouveau_budget', statut = '$nouveau_statut', date_fin = '$nouvelle_date_fin', commentaire = '$commentaire' WHERE id_jeu = $jeu_id";
-            if ($conn->query($sql) === TRUE) {
+            $sql = "UPDATE jeux SET budget = :nouveau_budget, statut = :nouveau_statut, date_fin = :nouvelle_date_fin, commentaire = :commentaire WHERE id_jeu = :jeu_id";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':nouveau_budget', $nouveau_budget);
+            $stmt->bindParam(':nouveau_statut', $nouveau_statut);
+            $stmt->bindParam(':nouvelle_date_fin', $nouvelle_date_fin);
+            $stmt->bindParam(':commentaire', $commentaire);
+            $stmt->bindParam(':jeu_id', $jeu_id);
+
+            if ($stmt->execute()) {
                 echo "Jeu modifié avec succès.";
             } else {
-                throw new Exception("Erreur lors de la modification du jeu : " . $conn->error);
+                throw new Exception("Erreur lors de la modification du jeu : " . $stmt->errorInfo());
             }
         }
 
         $sql = "SELECT * FROM jeux";
         $result = $conn->query($sql);
 
-        if ($result->num_rows > 0) {
+        if ($result->rowCount() > 0) {
             echo '<table class="table table-dark table-striped table-hover">
                     <thead>
                         <tr>
@@ -90,14 +115,14 @@
                             <th>Statut</th>
                             <th>Date de fin</th>
                             <th>Nom</th>
-                            <th>Prenom</th>
+                            <th>Prénom</th>
                             <th>Commentaire</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>';
 
-            while ($row = $result->fetch_assoc()) {
+            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 echo '<tr>
                         <td>' . $row["titre"] . '</td>
                         <td>' . $row["dernier_budget"] . '</td>
@@ -131,11 +156,10 @@
                 $sql = "SELECT SUM(budget) AS cout_total FROM jeux";
                 $result = $conn->query($sql);
 
-                if ($result->num_rows > 0) {
-                    $row = $result->fetch_assoc();
+                if ($result->rowCount() > 0) {
+                    $row = $result->fetch(PDO::FETCH_ASSOC);
                     $cout_total = $row["cout_total"];
                     echo '<p>Coût budgétaire total : ' . $cout_total . '</p>';
-
                 } else {
                     echo "Aucun jeu trouvé.";
                 }
@@ -143,13 +167,16 @@
         } else {
             echo "Aucun jeu trouvé.";
         }
-
-        $conn->close();
-    } catch (Exception $e) {
-        echo "Erreur MySQL : " . $e->getMessage();
+    } catch (PDOException $e) {
+        echo "Erreur de connexion à la base de données : " . $e->getMessage();
+        exit;
     }
     ?>
 </div>
 
 </body>
 </html>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+

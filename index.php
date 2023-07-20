@@ -1,9 +1,9 @@
 <?php
 
 $servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "gamesoft";
+$username = "u379183731_root";
+$password = "Khadidja69@";
+$dbname = "u379183731_jeux";
 
 try {
     
@@ -20,7 +20,7 @@ try {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
+        <title>Page d'accueil</title>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <style>
@@ -53,7 +53,7 @@ try {
     <body>
         <nav class="navbar navbar-expand-md navbar-dark" style="background-color: #747e88;">
             <div class="container">
-                <a class="navbar-brand" href="acceuil.php"><img src="./Images/logo jeuxvideo.png" alt="GameSoft Logo" width="60"></a>
+                <a class="navbar-brand" href="index.php"><img src="./Images/logo jeuxvideo.png" alt="GameSoft Logo" width="60"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -110,7 +110,7 @@ try {
                             <img src="<?php echo $cheminImage; ?>" class="card-img-top card-img-fixed-height" >
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo $titre?></h5>
-                                <!-- Affichez d'autres détails du jeu ici si nécessaire -->
+                              
                             </div>
                         </div>
                     </div>
@@ -133,3 +133,6 @@ try {
 }
 ?>
 
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -1,10 +1,9 @@
 
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "gamesoft";
-
+$servername = 'localhost';
+$username = 'u379183731_root';
+$password = 'Khadidja69@';
+$dbname = 'u379183731_jeux';
 try {
     $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
